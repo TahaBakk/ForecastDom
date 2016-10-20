@@ -2,7 +2,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -50,23 +49,44 @@ public class Main {
                 double velocitat =Double.parseDouble(eLista.getElementsByTagName("windSpeed").item(0).getAttributes().getNamedItem("mps").getTextContent());
                 double velocitatkph = velocitat*3.6;
 
+                //pasem de double a string per a poder utilitzar la variable per a crear un nou valor al atribut
                 String velocitatkphf = String.valueOf(velocitatkph);
+
+                //comprobem el codi del temps i així al podem converti el nom de angles al català
+                int codi = Integer.parseInt(eLista.getElementsByTagName("symbol").item(0).getAttributes().getNamedItem("number").getTextContent());
+                String tempsString;
+                switch (codi) {
+                    case 500:  tempsString = "Pluja lleugera";
+                        break;
+                    case 800:  tempsString = "cel està clar";
+                        break;
+                    case 801:  tempsString = "pocs núvols";
+                        break;
+                    case 802:  tempsString = "núvols dispersos";
+                        break;
+                    case 803:  tempsString = "Ple de núvols dispersos";
+                        break;
+                    case 804:  tempsString = "cobert amb núvols";
+                        break;
+                    default: tempsString = "Error amb el codi";
+                        break;
+                }
 
                 //Aqui imprimim le dades
                 System.out.println("La localització és: "+ nomLocalitzacio);
                 System.out.println("La temperatura és: "+eLista.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("value").getTextContent()+" "+eLista.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("unit").getTextContent());
-                System.out.println("El temps és: "+eLista.getElementsByTagName("symbol").item(0).getAttributes().getNamedItem("name").getTextContent());
+                System.out.println("El temps és: "+tempsString);
                 System.out.println("La velocitat en mps és: "+velocitat+" mps");
                 System.out.println("La velocitat en kph és: "+velocitatkph+" kph");
                 System.out.println("");
                 System.out.println("");
 
-
+                //cridem al metode  afegir_nouAttribut i li pasem le dades
                 afegir_nouAttribut((Element) eLista.getElementsByTagName("windSpeed").item(0), "kph", velocitatkphf);
 
 
             }
-
+            //Aquet apartat es per escriure totes le dades del xml al nou xml
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(db);
@@ -89,7 +109,7 @@ public class Main {
 
     }
     //hem creat aquet apart per a poder afegir un nou atribut al windSpeed
-    public static void afegir_nouAttribut(Element element, String name, String value){
+    private static void afegir_nouAttribut(Element element, String name, String value){
         element.setAttribute(name, value);
     }
 
