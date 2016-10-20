@@ -1,5 +1,6 @@
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        File inputFile = new File("biblio.xml");
+        File inputFile = new File("forecast.xml");
 
         //factoria de constructor de documentos
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -25,28 +26,22 @@ public class Main {
             dbBuilder = dbFactory.newDocumentBuilder();
 
             Document db = dbBuilder.parse(inputFile);
+            System.out.println("Root element : " + db.getDocumentElement().getNodeName());
 
+            NodeList lista = db.getElementsByTagName( "location" );
 
+            Element namelista = (Element) lista.item(0);
+            System.out.println("El lloc és: "+namelista.getElementsByTagName("name").item(0).getTextContent());
 
-            NodeList lista = db.getElementsByTagName( "time" );
+            NodeList list = db.getElementsByTagName("time");
 
+            for (int i = 0; i < list.getLength(); i++) {
 
+                Element eLista = (Element) list.item(i);
 
-            for (int i = 0; i < lista.getLength(); i++) {
-                Element eLista = (Element) lista.item(i);
+                System.out.println("La temperatura és: "+eLista.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("value").getTextContent()+"graus celsius");
+                System.out.println("El temps és: "+eLista.getElementsByTagName("symbol").item(0).getAttributes().getNamedItem("name").getTextContent());
 
-
-                System.out.println(eLista.getElementsByTagName());
-
-
-
-
-                //System.out.println( lista.item(i).getTextContent() );
-               /* System.out.println( "El eLista amb titol " + eLista.getElementsByTagName("titulo").item(0).getTextContent() +
-                        " te com autor " + eLista.getElementsByTagName("autor").item(0).getTextContent() + " i va ser publicat l'any " +
-                        eLista.getElementsByTagName("fecha").item(0).getTextContent() + ".");*/
-            /*item(0) si hi ha sols 1 titol, si haguessin 2 i vulguessim veure el 2n seria 1 pero la resta de llibres donaria error
-            * el mateix per als altres camps del XML*/
             }
 
 
