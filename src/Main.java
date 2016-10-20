@@ -1,12 +1,14 @@
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 
@@ -38,6 +40,7 @@ public class Main {
             //Aquet NodeList el creem per extrure totes les dades que te l'apartat temps
             NodeList list = db.getElementsByTagName("time");
 
+
             //Recorrem tot el llistat y l'imprimim amb aquet for
             for (int i = 0; i < list.getLength(); i++) {
 
@@ -45,21 +48,30 @@ public class Main {
 
                 //Això es per a saber la velocitat en mps i en mph
                 double velocitat =Double.parseDouble(eLista.getElementsByTagName("windSpeed").item(0).getAttributes().getNamedItem("mps").getTextContent());
-                double velocitatmph = velocitat*3.6;
+                double velocitatkph = velocitat*3.6;
+
+                String velocitatkphf = String.valueOf(velocitatkph);
 
                 //Aqui imprimim le dades
                 System.out.println("La localització és: "+ nomLocalitzacio);
                 System.out.println("La temperatura és: "+eLista.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("value").getTextContent()+" "+eLista.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("unit").getTextContent());
                 System.out.println("El temps és: "+eLista.getElementsByTagName("symbol").item(0).getAttributes().getNamedItem("name").getTextContent());
                 System.out.println("La velocitat en mps és: "+velocitat+" mps");
-                System.out.println("La velocitat en mph és: "+velocitatmph+" mph");
+                System.out.println("La velocitat en kph és: "+velocitatkph+" kph");
                 System.out.println("");
                 System.out.println("");
+
+
+                afegir_nouAttribut((Element) eLista.getElementsByTagName("windSpeed").item(0), "kph", velocitatkphf);
+
 
             }
 
-
-
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(db);
+            StreamResult result = new StreamResult(new  File("ResultatDomForecast.xml"));
+            transformer.transform(source, result);
 
 
         } catch (ParserConfigurationException e) {
@@ -68,8 +80,17 @@ public class Main {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
         }
 
 
     }
+    //hem creat aquet apart per a poder afegir un nou atribut al windSpeed
+    public static void afegir_nouAttribut(Element element, String name, String value){
+        element.setAttribute(name, value);
+    }
+
 }
