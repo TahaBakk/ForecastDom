@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SAXException, IOException, TransformerConfigurationException, TransformerException {
         File inputFile = new File("forecast.xml");
 
         //factoria de constructor de documentos
@@ -95,14 +95,6 @@ public class Main {
 
 
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
             e.printStackTrace();
         }
 
