@@ -89,9 +89,9 @@ public class Main {
             //Aquet apartat es per escriure totes le dades del xml al nou xml
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(db);
-            StreamResult result = new StreamResult(new  File("ResultatDomForecast.xml"));
-            transformer.transform(source, result);
+            DOMSource source = new DOMSource(db);//Li pasem el document que estem fent servir i es guarda en la variable source
+            StreamResult result = new StreamResult(new  File("ResultatDomForecast.xml"));//li posem el nom del xml a crear i es guarda en la variable result
+            transformer.transform(source, result);//Aqui li diem que el fitxer source el pasarem al result amb tots el canvis, el fitxer si existeix és sobreescriu.
 
 
         } catch (ParserConfigurationException e) {
